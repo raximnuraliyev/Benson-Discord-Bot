@@ -24,9 +24,17 @@ client.on(Events.GuildMemberAdd, async member => {
     const welcomeChannel = member.guild.channels.cache.find(
       channel => channel.name === 'welcome' && channel.isTextBased()
     );
+    // Find the roles channel (dynamic, looks for a channel with 'role' in the name)
+    const rolesChannel = member.guild.channels.cache.find(
+      channel => channel.name.includes('role') && channel.isTextBased()
+    );
+
+    let welcomeMessage = `Welcome to Boone cord, ${member}! 🎉`;
+    if (rolesChannel) {
+      welcomeMessage += `\nPlease grab some roles in ${rolesChannel}`;
+    }
 
     if (welcomeChannel) {
-      const welcomeMessage = `Welcome to the server, ${member}! 🎉`;
       await welcomeChannel.send(welcomeMessage);
       console.log(`Welcome message sent for ${member.user.tag}`);
     } else {
