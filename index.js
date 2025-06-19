@@ -343,6 +343,8 @@ function isUserTimedOut(userId) {
 
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
+  // Only respond in #chat-with-benson
+  if (message.channel.type === 0 && message.channel.name !== 'chat-with-benson') return;
   // If user is timed out but says "come back", remove timeout and reply
   if (isUserTimedOut(message.author.id)) {
     if (message.content.toLowerCase().includes('come back') && message.mentions.has(client.user)) {

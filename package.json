@@ -21,7 +21,7 @@
     "nodejs",
     "ai"
   ],
-  "author": "Your Name",
+  "author": "Rakhim",
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^3.1.10"
