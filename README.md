@@ -1,19 +1,19 @@
-# 🤖 Benson Discord Bot
+# Benson Discord Bot
 
 Welcome to **Benson**, your friendly, smart, and customizable Discord bot! Benson greets new members, says goodbye, and auto-replies to a wide range of chat triggers to keep your server lively and interactive.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎉 **Welcome Messages**: Greets new users in `#welcome`.
-- 👋 **Farewell Messages**: Bids goodbye in `#goodbye`.
-- 💬 **Auto-Replies**: Instantly responds to common phrases and their short forms (e.g. `hi`, `gm`, `tyyy`, etc.).
-- ⚡ **Fast & Lightweight**: No bloat, just pure chat fun!
+-  **Welcome Messages**: Greets new users in `#welcome`.
+-  **Farewell Messages**: Bids goodbye in `#goodbye`.
+-  **Auto-Replies**: Instantly responds to common phrases and their short forms (e.g. `hi`, `gm`, `tyyy`, etc.).
+-  **Fast & Lightweight**: No bloat, just pure chat fun!
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 1. **Clone the repo & install dependencies:**
    ```bash
@@ -37,7 +37,7 @@ Welcome to **Benson**, your friendly, smart, and customizable Discord bot! Benso
 
 ---
 
-## ⚙️ Setup Details
+## Setup Details
 
 ### 1. Create a Discord Application & Bot
 - Go to the [Discord Developer Portal](https://discord.com/developers/applications)
@@ -56,7 +56,7 @@ Welcome to **Benson**, your friendly, smart, and customizable Discord bot! Benso
 
 ---
 
-## 🛠️ Environment Variables
+## Environment Variables
 
 | Variable   | Description                |
 |------------|----------------------------|
@@ -64,7 +64,7 @@ Welcome to **Benson**, your friendly, smart, and customizable Discord bot! Benso
 
 ---
 
-## 📝 Example Usage
+## Example Usage
 
 - **Say hi:**
   > User: hi
@@ -78,7 +78,7 @@ Welcome to **Benson**, your friendly, smart, and customizable Discord bot! Benso
 
 ---
 
-## 🧩 Troubleshooting
+## Troubleshooting
 
 - **Bot not responding?**
   - Check bot permissions and intents in the Developer Portal.
@@ -91,13 +91,8 @@ Welcome to **Benson**, your friendly, smart, and customizable Discord bot! Benso
 
 ---
 
-## 💡 Contributing
+## Contributing
 Pull requests and suggestions are welcome! Open an issue or submit a PR to help improve Benson.
-
----
-
-## 📜 License
-MIT
 
 ---
 
