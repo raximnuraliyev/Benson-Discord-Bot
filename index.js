@@ -35,6 +35,13 @@ client.on(Events.GuildMemberAdd, async member => {
     }
 
     if (welcomeChannel) {
+      // Check permissions before sending
+      const botMember = await member.guild.members.fetchMe();
+      const perms = welcomeChannel.permissionsFor(botMember);
+      if (!perms || !perms.has('SendMessages')) {
+        console.error('❌ Bot lacks permission to send messages in #welcome.');
+        return;
+      }
       await welcomeChannel.send(welcomeMessage);
       console.log(`Welcome message sent for ${member.user.tag}`);
     } else {
