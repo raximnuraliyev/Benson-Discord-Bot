@@ -166,14 +166,19 @@ async function getAIResponse(userMessage) {
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
   try {
-    // Always reply with AI
-    await message.channel.sendTyping();
-    const aiResponse = await getAIResponse(message.content);
-    if (aiResponse) {
-      await message.reply(aiResponse);
-      console.log(`🤖 AI reply to ${message.author.tag}: "${message.content}" -> "${aiResponse}"`);
+    const normalized = normalizeMessage(message.content);
+    if (replyMap[normalized]) {
+      await message.reply(replyMap[normalized]);
+      console.log(`📝 Custom reply to ${message.author.tag}: "${message.content}" -> "${replyMap[normalized]}"`);
     } else {
-      await message.reply("Sorry, I'm having trouble thinking right now!");
+      await message.channel.sendTyping();
+      const aiResponse = await getAIResponse(message.content);
+      if (aiResponse) {
+        await message.reply(aiResponse);
+        console.log(`🤖 AI reply to ${message.author.tag}: "${message.content}" -> "${aiResponse}"`);
+      } else {
+        await message.reply("Sorry, I'm having trouble thinking right now!");
+      }
     }
   } catch (error) {
     console.error('Error processing message:', error);
