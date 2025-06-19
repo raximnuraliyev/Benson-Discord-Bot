@@ -216,6 +216,10 @@ const negativeWords = [
 // Track recent user moods
 const userMood = {};
 
+// Track recent messages per channel to detect user-to-user conversations
+const channelMessageHistory = {};
+const BOT_USERNAMES = [client.user?.username || 'Benson']; // fallback if not ready
+
 function detectSentiment(text) {
   const lower = text.toLowerCase();
   if (negativeWords.some(word => lower.includes(word))) return 'negative';
@@ -298,8 +302,63 @@ async function getDynamicAIResponse(userMessage, contextType) {
   }
 }
 
+// Improved: Only reply if not interrupting a conversation between 2+ users
+const channelUserHistory = {};
+
+function shouldBotReply(message) {
+  const channelId = message.channel.id;
+  if (!channelUserHistory[channelId]) channelUserHistory[channelId] = [];
+  // Add this message to history (ignore bot messages)
+  if (!message.author.bot) {
+    channelUserHistory[channelId].push(message.author.id);
+    if (channelUserHistory[channelId].length > 10) channelUserHistory[channelId].shift();
+  }
+  // Always reply if mentioned or replied to
+  if (message.mentions.has(client.user)) return true;
+  if (message.reference) {
+    if (message.reference.messageId && message.channel.messages) {
+      // Try to fetch the replied-to message
+      return message.fetchReference().then(refMsg => refMsg.author.id === client.user.id).catch(() => false);
+    }
+  }
+  // If the last 3 non-bot messages are from 2 or more unique users (not the bot), stay silent
+  const recent = channelUserHistory[channelId].slice(-3);
+  const unique = [...new Set(recent.filter(id => id !== client.user?.id))];
+  if (unique.length >= 2) return false;
+  return true;
+}
+
+// User-specific timeout if they tell the bot to shut up
+const userTimeouts = {};
+const TIMEOUT_DURATION = 5 * 60 * 1000; // 5 minutes in ms
+
+function isUserTimedOut(userId) {
+  if (!userTimeouts[userId]) return false;
+  if (Date.now() > userTimeouts[userId]) {
+    delete userTimeouts[userId];
+    return false;
+  }
+  return true;
+}
+
 client.on(Events.MessageCreate, async message => {
   if (message.author.bot) return;
+  // If user is timed out but says "come back", remove timeout and reply
+  if (isUserTimedOut(message.author.id)) {
+    if (message.content.toLowerCase().includes('come back') && message.mentions.has(client.user)) {
+      delete userTimeouts[message.author.id];
+      await message.reply("I'm back! Thanks for inviting me to chat again! 😊");
+    }
+    return;
+  }
+  // Timeout logic: if user says "shut up" to the bot, mute for 5 minutes
+  if (message.content.toLowerCase().includes('shut up') && message.mentions.has(client.user)) {
+    userTimeouts[message.author.id] = Date.now() + TIMEOUT_DURATION;
+    await message.reply("Okay, I'll be quiet for a bit! 🤫");
+    return;
+  }
+  const shouldReply = await shouldBotReply(message);
+  if (!shouldReply) return;
   try {
     const userId = message.author.id;
     const content = message.content.trim();
